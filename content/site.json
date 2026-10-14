@@ -1,0 +1,14 @@
+{
+  "name": "a grey area",
+  "titleSuffix": "multimedia design for theatre, live shows and film",
+  "description": "A Grey Area is a multimedia design studio in Singapore creating projection design, motion graphics and video for theatre, live shows and film.",
+  "url": "https://agreyarea.co",
+  "email": "contact.maxliang@gmail.com",
+  "location": "singapore",
+  "blurbs": [
+    "works that sit between film, stage and screen",
+    "mostly the space in between"
+  ],
+  "collageOrder": ["the-nether", "strawberries-inc", "national-day-parade", "constellations", "house-on-the-moon", "dick-lee-50"],
+  "standIns": true
+}
