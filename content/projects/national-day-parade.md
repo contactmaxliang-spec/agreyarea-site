@@ -8,6 +8,7 @@ creativeDirector: Brian Gothong Tan (2025)
 client: NDP Executive Committee
 venue: The Padang, UOB Plaza One and The Fullerton Hotel (2025)
 editions: 2018, 2020, 2021, 2023, 2024, 2025
+mediaCredit: Hexogon Solution
 summary: National Day Parade, Singapore — six editions, 2018–2025. Multimedia production by A Grey Area.
 featured: true
 order: 4
