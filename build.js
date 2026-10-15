@@ -150,7 +150,7 @@ function layout({ title, description, body, pagePath = '/', bodyClass = '', imag
 <link rel="stylesheet" href="/styles.css">
 <script src="/site.js" defer></script>
 </head>
-<body class="${bodyClass}">
+<body class="${bodyClass}" data-reveal="${esc(site.reveal || 'pixels')}">
 <a class="skip" href="#main">skip to content</a>
 <header class="site-header">
 <a class="wordmark" href="/">${esc(site.name)}</a>
