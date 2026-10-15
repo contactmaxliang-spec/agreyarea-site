@@ -15,7 +15,7 @@ featured: true
 order: 4
 cover: media/national-day-parade/1.jpg
 loop:
-video:
+video: https://youtu.be/IgPI79XpOMs
 stills: media/national-day-parade/1.jpg, media/national-day-parade/2.jpg, media/national-day-parade/3.jpg, media/national-day-parade/4.jpg, media/national-day-parade/5.jpg, media/national-day-parade/6.jpg
 ---
 Across six editions of Singapore's National Day Parade, A Grey Area worked within the multimedia team in a production capacity, its role growing with each edition: from multimedia line producer to producing the show's animation in 2025.
