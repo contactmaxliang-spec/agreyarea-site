@@ -9,10 +9,10 @@ venue: Kewalram Chanrai Arts Centre
 summary: Constellations — The Winter Players, 2026. Multimedia design and programming by A Grey Area.
 featured: true
 order: 3
-cover: media/constellations/cover.jpg
+cover: media/constellations/poster.jpg
 loop: media/constellations/loop.mp4
 video: https://youtu.be/1z5dPEd-vJ4
-stills: media/constellations/cover.jpg
+stills: media/constellations/1.jpg, media/constellations/2.jpg, media/constellations/3.jpg, media/constellations/4.jpg, media/constellations/5.jpg, media/constellations/6.jpg
 ---
 Conversations around assisted dying remain largely muted in Singapore, often set aside with the sense that society is not ready for them. The Winter Players' Constellations steps into that silence, holding the ethical and emotional weight of such a choice without settling it.
 
