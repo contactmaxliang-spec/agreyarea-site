@@ -59,6 +59,7 @@
   if (style === 'off' || !shots.length || !window.HTMLCanvasElement) return;
 
   var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+  var touchQueue = [];
   var BG = [37, 37, 37];
   var clamp = function (v) { return v < 0 ? 0 : v > 255 ? 255 : Math.round(v); };
   var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
@@ -199,10 +200,32 @@
       shot.addEventListener('mouseleave', function () { reveal(false); });
       shot.addEventListener('focus', function () { reveal(true); });
       shot.addEventListener('blur', function () { reveal(false); });
-    } else if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        reveal(entries[0].isIntersecting);
-      }, { rootMargin: '-38% 0px -38% 0px' }).observe(shot);
+    } else {
+      touchQueue.push({ shot: shot, go: function () { reveal(true); } });
     }
   });
+
+  // Touch screens: nothing reveals on load. From the first scroll, shots reveal one at
+  // a time in reading order, each once it rises above ~65% of the screen (or has been
+  // scrolled past), with a short beat between them.
+  if (touchQueue.length) {
+    var nextIdx = 0, lastReveal = 0, pending = false, BEAT = 320;
+    var topOf = function (el) { return el.getBoundingClientRect().top + (window.scrollY || 0); };
+    touchQueue.sort(function (a, b) { return topOf(a.shot) - topOf(b.shot); });
+    var check = function () {
+      pending = false;
+      if (nextIdx >= touchQueue.length || (window.scrollY || 0) < 30) return;
+      var r = touchQueue[nextIdx].shot.getBoundingClientRect();
+      var due = (r.top + r.height / 2) < window.innerHeight * 0.65;
+      if (!due) return;
+      var wait = BEAT - (Date.now() - lastReveal);
+      if (wait > 0) { pending = true; setTimeout(check, wait); return; }
+      touchQueue[nextIdx].go();
+      nextIdx++;
+      lastReveal = Date.now();
+      pending = true;
+      setTimeout(check, BEAT);
+    };
+    window.addEventListener('scroll', function () { if (!pending) check(); }, { passive: true });
+  }
 })();
