@@ -65,37 +65,16 @@ function imageSize(file) {
   return { w: 3, h: 2 };
 }
 
-// Editorial sequence for project stills: images keep their real shape and are laid
-// out in a varied rhythm — a full-width image, a matched-height pair, an inset single
-// (alternating sides). A portrait pairs with the image after it at matched height,
-// or sits alone at half width if it is last.
+// Project stills: one photo per row, real proportions, even spacing.
 function stillsSequence(p) {
   const items = p.stills.map((s, n) => {
     const { w, h } = imageSize(path.join(ROOT, s));
     return { src: s, n, w, h, ar: w / h, portrait: h > w * 1.05 };
   });
-  const fig = (it) => `<a class="still" href="/${esc(it.src)}" data-index="${it.n}" style="flex: ${it.ar.toFixed(4)} 1 0%"><img src="/${esc(it.src)}" alt="${esc(p.title)}, still ${it.n + 1}" width="${it.w}" height="${it.h}" loading="lazy" decoding="async"></a>`;
-  const rows = [];
-  const singles = ['full', 'inset-right', 'full', 'inset-left'];
-  let s = 0, wantPair = false, side = 0;
-  for (let i = 0; i < items.length; i++) {
-    const a = items[i], b = items[i + 1];
-    if (a.portrait) {
-      if (b) { rows.push(`<div class="row pair">${fig(a)}${fig(b)}</div>`); i++; }
-      else { rows.push(`<div class="row portrait ${side++ % 2 ? 'left' : 'right'}">${fig(a)}</div>`); }
-      wantPair = false;
-      continue;
-    }
-    if (wantPair && b && !b.portrait) {
-      rows.push(`<div class="row pair">${fig(a)}${fig(b)}</div>`);
-      i++;
-      wantPair = false;
-      continue;
-    }
-    rows.push(`<div class="row single ${singles[s++ % singles.length]}">${fig(a)}</div>`);
-    wantPair = true;
-  }
-  return `<div class="stills">${rows.join('\n')}</div>`;
+  // One photo per row, centred, same gap throughout. Landscapes fill the column;
+  // portraits are capped to the screen height so they never tower over the page.
+  const fig = (it) => `<a class="still${it.portrait ? ' portrait' : ''}" href="/${esc(it.src)}" data-index="${it.n}" style="--ar: ${it.ar.toFixed(4)}"><img src="/${esc(it.src)}" alt="${esc(p.title)}, still ${it.n + 1}" width="${it.w}" height="${it.h}" loading="lazy" decoding="async"></a>`;
+  return `<div class="stills">${items.map(fig).join('\n')}</div>`;
 }
 
 function list(v) {
