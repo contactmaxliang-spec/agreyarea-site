@@ -9,12 +9,12 @@ animationDirector: Sally Lee (2025)
 client: NDP Executive Committee
 venue: The Padang, UOB Plaza One and The Fullerton Hotel (2025)
 editions: 2018, 2020, 2021, 2023, 2024, 2025
-mediaCredit: Hexogon Solution
+mediaCredit: Hexogon Solution (selected photos)
 summary: National Day Parade, Singapore — six editions, 2018–2025. Multimedia production by A Grey Area.
 featured: true
 order: 4
-cover: media/national-day-parade/1.jpg
-loop:
+cover: media/national-day-parade/poster.jpg
+loop: media/national-day-parade/loop.mp4
 video: https://youtu.be/IgPI79XpOMs
 stills: media/national-day-parade/1.jpg, media/national-day-parade/2.jpg, media/national-day-parade/3.jpg, media/national-day-parade/4.jpg, media/national-day-parade/5.jpg, media/national-day-parade/6.jpg
 ---
