@@ -1,13 +1,18 @@
 ---
-title: House on the Moon
-company: Nelson Yeo
-year: 2025
-role: [CONFIRM CREDIT]
+title: The House on the Moon
+company: Momo Film Co
+year: 2026
+role: Virtual art direction / Multimedia design & programming
+director: Nelson Yeo
+premiere: Locarno Film Festival 2026, International Competition
+summary: The House on the Moon — Nelson Yeo, 2026. Virtual art direction by A Grey Area.
 featured: true
 order: 5
 cover: media/house-on-the-moon/cover.jpg
 loop:
-video:
+video: https://www.youtube.com/watch?v=zRxlSLxiWXo
 stills: media/house-on-the-moon/cover.jpg
 ---
-[Description to come: the brief, what A Grey Area made, and one design decision.]
+Nelson Yeo's second feature reimagines the legend of Chang'e as Singapore's first wuxia film. On the far side of the moon, the goddess searches for her missing husband and crosses paths with a bandit stranded there from Earth. The film premiered in competition at Locarno in 2026.
+
+Working with the art team, A Grey Area designed the environments that couldn't be found on location, combining footage and still assets to build a sense of space on the virtual production stage.

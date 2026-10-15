@@ -226,7 +226,7 @@ function projectPage(p, i) {
     ? `<div class="hero-media"><iframe src="${esc(embed)}" title="${esc(p.title)} video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
     : `<div class="hero-media">${media(p, { eager: true })}</div>`;
   const meta = [p.company, p.place, p.year].filter(Boolean).map(esc).join(' — ');
-  const credits = [['role', p.role], ['director', p.director], ['company', p.company], ['venue', p.venue]]
+  const credits = [['role', p.role], ['director', p.director], ['company', p.company], ['venue', p.venue], ['premiere', p.premiere]]
     .filter(([, v]) => v)
     .map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
   const stills = p.stills.length
