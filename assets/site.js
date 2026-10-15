@@ -75,7 +75,7 @@
     var small = document.createElement('canvas');
     var sctx = small.getContext('2d', { willReadFrequently: true });
 
-    var p = 0, target = 0, inView = false, running = false, lastT = 0, lastDraw = 0, dirty = true, glow = null;
+    var p = 0, target = 0, inView = false, running = false, lastT = 0, lastDraw = 0, dirty = true, glow = null, locked = false;
 
     function resize() {
       var r = shot.getBoundingClientRect();
@@ -162,6 +162,7 @@
       }
       cv.style.opacity = String(1 - Math.min(1, Math.max(0, (p - 0.55) / 0.45)));
       var fullyRevealed = p === 1;
+      if (fullyRevealed && !locked) { locked = true; target = 1; shot.classList.add('revealed'); }
       var animated = (isVideo || flicker) && !fullyRevealed;
       var tick = animated && t - lastDraw > (isVideo ? 41 : 70);
       if (!fullyRevealed && (dirty || tick)) {
@@ -174,7 +175,12 @@
     function kick() {
       if (!running) { running = true; window.requestAnimationFrame(frame); }
     }
-    function reveal(on) { target = on ? 1 : 0; kick(); }
+    // Once a shot has fully resolved it stays revealed for the rest of the visit.
+    function reveal(on) {
+      if (locked) return;
+      target = on ? 1 : 0;
+      kick();
+    }
 
     resize();
     window.addEventListener('resize', function () { resize(); kick(); });

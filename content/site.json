@@ -11,5 +11,7 @@
   ],
   "collageOrder": ["the-nether", "strawberries-inc", "national-day-parade", "constellations", "house-on-the-moon", "dick-lee-50"],
   "reveal": "pixels",
+  "bloom": true,
+  "flicker": true,
   "standIns": true
 }
