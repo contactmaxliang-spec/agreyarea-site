@@ -5,6 +5,7 @@ place: Singapore
 year: 2025
 role: Multimedia animation producer (2025) · Multimedia line producer (2018–2024)
 creativeDirector: Brian Gothong Tan (2025)
+animationDirector: Sally Lee (2025)
 client: NDP Executive Committee
 venue: The Padang, UOB Plaza One and The Fullerton Hotel (2025)
 editions: 2018, 2020, 2021, 2023, 2024, 2025
