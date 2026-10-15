@@ -53,6 +53,9 @@
   var tint = parseFloat(q('tint') !== null ? q('tint') : (document.body.getAttribute('data-tint') || '0')) || 0;
   var flickerAttr = q('flicker') !== null ? q('flicker') : document.body.getAttribute('data-flicker');
   var flicker = flickerAttr === '1' || flickerAttr === 'true';
+  //   bloom   — colour arrives as the blocks resolve on hover (?bloom=1); on whenever tint > 0
+  var bloomAttr = q('bloom') !== null ? q('bloom') : document.body.getAttribute('data-bloom');
+  var bloom = bloomAttr === '1' || bloomAttr === 'true' || tint > 0;
   if (style === 'off' || !shots.length || !window.HTMLCanvasElement) return;
 
   var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
@@ -110,7 +113,7 @@
         }
       }
       // Colour rises from the tint at rest to full colour as the blocks resolve.
-      var sat = tint > 0 ? tint + (1 - tint) * e : 0;
+      var sat = bloom ? tint + (1 - tint) * e : 0;
       for (var y = 0; y < rows; y++) {
         for (var x = 0; x < cols; x++) {
           var i = (y * cols + x) * 4;
