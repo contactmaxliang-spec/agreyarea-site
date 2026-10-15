@@ -18,4 +18,4 @@ Conversations around assisted dying remain largely muted in Singapore, often set
 
 The production doesn't offer answers. It makes a space where they can be discussed and debated.
 
-[One or two sentences on the multimedia: what A Grey Area designed and programmed, and how it served the play.]
+A Grey Area approached the multimedia as a series of transient states: canvases that flowed into one another, then broke apart into isolation. Cued to the show's beats, they let the play's fractured realities stand apart or connect as each moment needed.
