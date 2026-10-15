@@ -1,4 +1,50 @@
-// a grey area — small enhancements: collage parallax and loop playback.
+// a grey area — small enhancements: still viewer, collage parallax, loop playback, coded reveal.
+
+// Full-screen viewer for project stills. Without JS the links simply open the image.
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.stills .still'));
+  if (!links.length) return;
+  var idx = 0, lastFocus = null;
+  var v = document.createElement('div');
+  v.className = 'viewer';
+  v.hidden = true;
+  v.setAttribute('role', 'dialog');
+  v.setAttribute('aria-modal', 'true');
+  v.setAttribute('aria-label', 'Image viewer');
+  v.innerHTML = '<img alt=""><button type="button" class="v-close">close</button>' +
+    '<button type="button" class="v-prev" aria-label="Previous image">←</button>' +
+    '<button type="button" class="v-next" aria-label="Next image">→</button><span class="v-count"></span>';
+  document.body.appendChild(v);
+  var img = v.querySelector('img'), count = v.querySelector('.v-count');
+  function show(i) {
+    idx = (i + links.length) % links.length;
+    var src = links[idx].querySelector('img');
+    img.src = links[idx].getAttribute('href');
+    img.alt = src ? src.alt : '';
+    count.textContent = (idx + 1) + ' / ' + links.length;
+  }
+  function open(i) { lastFocus = document.activeElement; show(i); v.hidden = false; document.body.style.overflow = 'hidden'; v.querySelector('.v-close').focus(); }
+  function close() { v.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
+  links.forEach(function (a, i) { a.addEventListener('click', function (e) { e.preventDefault(); open(i); }); });
+  v.querySelector('.v-close').addEventListener('click', close);
+  v.querySelector('.v-prev').addEventListener('click', function () { show(idx - 1); });
+  v.querySelector('.v-next').addEventListener('click', function () { show(idx + 1); });
+  v.addEventListener('click', function (e) { if (e.target === v) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (v.hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') show(idx - 1);
+    else if (e.key === 'ArrowRight') show(idx + 1);
+  });
+  var x0 = null;
+  v.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  v.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+  });
+})();
+
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var wide = window.matchMedia ? window.matchMedia('(min-width: 761px)') : { matches: true };
@@ -76,7 +122,8 @@
     var small = document.createElement('canvas');
     var sctx = small.getContext('2d', { willReadFrequently: true });
 
-    var p = 0, target = 0, inView = false, running = false, lastT = 0, lastDraw = 0, dirty = true, glow = null, locked = false;
+    var p = 0, target = 0, inView = false, running = false, lastT = 0, lastDraw = 0, dirty = true, glow = null, locked = false, slow = false, hovered = false, coverTimer = null;
+    var HOLD = 12000;
 
     function resize() {
       var r = shot.getBoundingClientRect();
@@ -158,7 +205,8 @@
       var step = dt / 750;
       var moving = p !== target;
       if (moving) {
-        p = target > p ? Math.min(target, p + step) : Math.max(target, p - step * 1.4);
+        p = target > p ? Math.min(target, p + step) : Math.max(target, p - step * (slow ? 0.5 : 1.4));
+        if (p === 0) slow = false;
         dirty = true;
       }
       cv.style.opacity = String(1 - Math.min(1, Math.max(0, (p - 0.55) / 0.45)));
@@ -176,10 +224,20 @@
     function kick() {
       if (!running) { running = true; window.requestAnimationFrame(frame); }
     }
-    // Once a shot has fully resolved it stays revealed for the rest of the visit.
+    // Once a shot has fully resolved it stays revealed until cover() returns it to
+    // pixels: on desktop 12 s after the pointer leaves it, on touch screens once it
+    // has been scrolled off screen. The return is slower than the reveal.
     function reveal(on) {
       if (locked) return;
       target = on ? 1 : 0;
+      kick();
+    }
+    function cover() {
+      clearTimeout(coverTimer);
+      locked = false;
+      slow = true;
+      target = 0;
+      shot.classList.remove('revealed');
       kick();
     }
 
@@ -196,12 +254,26 @@
     } else { inView = true; kick(); }
 
     if (canHover) {
-      shot.addEventListener('mouseenter', function () { reveal(true); });
-      shot.addEventListener('mouseleave', function () { reveal(false); });
-      shot.addEventListener('focus', function () { reveal(true); });
-      shot.addEventListener('blur', function () { reveal(false); });
+      var enter = function () { hovered = true; clearTimeout(coverTimer); reveal(true); };
+      var leave = function () {
+        hovered = false;
+        if (locked) coverTimer = setTimeout(function () { if (!hovered) cover(); }, HOLD);
+        else reveal(false);
+      };
+      shot.addEventListener('mouseenter', enter);
+      shot.addEventListener('mouseleave', leave);
+      shot.addEventListener('focus', enter);
+      shot.addEventListener('blur', leave);
     } else {
-      touchQueue.push({ shot: shot, go: function () { reveal(true); } });
+      var item = { shot: shot, state: 'coded', at: 0 };
+      item.go = function () { item.state = 'revealed'; item.at = Date.now(); reveal(true); };
+      item.cover = function () { item.state = 'coded'; cover(); };
+      touchQueue.push(item);
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          if (!entries[0].isIntersecting && item.state === 'revealed' && Date.now() - item.at > 1500) item.cover();
+        }).observe(shot);
+      }
     }
   });
 
@@ -209,19 +281,27 @@
   // a time in reading order, each once it rises above ~65% of the screen (or has been
   // scrolled past), with a short beat between them.
   if (touchQueue.length) {
-    var nextIdx = 0, lastReveal = 0, pending = false, BEAT = 320;
+    var lastReveal = 0, pending = false, BEAT = 320;
     var topOf = function (el) { return el.getBoundingClientRect().top + (window.scrollY || 0); };
     touchQueue.sort(function (a, b) { return topOf(a.shot) - topOf(b.shot); });
     var check = function () {
       pending = false;
-      if (nextIdx >= touchQueue.length || (window.scrollY || 0) < 30) return;
-      var r = touchQueue[nextIdx].shot.getBoundingClientRect();
-      var due = (r.top + r.height / 2) < window.innerHeight * 0.65;
-      if (!due) return;
+      if ((window.scrollY || 0) < 30) return;
+      // The first still-coded shot (in reading order) that is on screen.
+      var next = null;
+      for (var i = 0; i < touchQueue.length; i++) {
+        var it = touchQueue[i];
+        if (it.state !== 'coded') continue;
+        if (it.shot.getBoundingClientRect().bottom <= 0) continue;
+        next = it;
+        break;
+      }
+      if (!next) return;
+      var r = next.shot.getBoundingClientRect();
+      if ((r.top + r.height / 2) >= window.innerHeight * 0.65) return;
       var wait = BEAT - (Date.now() - lastReveal);
       if (wait > 0) { pending = true; setTimeout(check, wait); return; }
-      touchQueue[nextIdx].go();
-      nextIdx++;
+      next.go();
       lastReveal = Date.now();
       pending = true;
       setTimeout(check, BEAT);
