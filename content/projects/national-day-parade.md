@@ -12,10 +12,10 @@ mediaCredit: Hexogon Solution
 summary: National Day Parade, Singapore — six editions, 2018–2025. Multimedia production by A Grey Area.
 featured: true
 order: 4
-cover: media/national-day-parade/cover.jpg
-loop: media/national-day-parade/loop.mp4
+cover: media/national-day-parade/1.jpg
+loop:
 video:
-stills: media/national-day-parade/cover.jpg
+stills: media/national-day-parade/1.jpg, media/national-day-parade/2.jpg, media/national-day-parade/3.jpg, media/national-day-parade/4.jpg, media/national-day-parade/5.jpg, media/national-day-parade/6.jpg
 ---
 Across six editions of Singapore's National Day Parade, A Grey Area worked within the multimedia team in a production capacity, its role growing with each edition: from multimedia line producer to producing the show's animation in 2025.
 
